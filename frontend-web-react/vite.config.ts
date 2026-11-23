@@ -17,7 +17,7 @@ const config = defineConfig({
   server: {
     // Same-origin proxy to FastAPI so the auth cookie works without CORS fuss.
     proxy: {
-      '/api': { target: process.env.API_URL ?? 'http://localhost:8000', changeOrigin: true },
+      '/api': { target: process.env.VITE_API_URL ?? 'http://localhost:8000', changeOrigin: true },
     },
   },
 })
