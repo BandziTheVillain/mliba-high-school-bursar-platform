@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} · API</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='images/crest.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="{{ url_for('static', path='images/crest.png') }}" alt="Mliba High School crest">
+      <div>
+        <h1>{{ title }}</h1>
+        <p class="sub">REST API for recording student fee payments, balances and payment cards.</p>
+      </div>
+    </header>
+
+    <div class="card status" aria-label="Service status">
+      <div>
+        <div class="label">API</div>
+        <div class="value"><span class="pill ok"><span class="dot"></span>Online</span></div>
+      </div>
+      <div>
+        <div class="label">Database</div>
+        <div class="value">
+          {% if db_ok %}
+            <span class="pill ok"><span class="dot"></span>Connected</span>
+          {% else %}
+            <span class="pill bad"><span class="dot"></span>Unreachable</span>
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        <div class="label">Version</div>
+        <div class="value mono">v{{ version }}</div>
+      </div>
+      <div>
+        <div class="label">Running since</div>
+        <div class="value" title="{{ started_at.isoformat() }}">{{ started_at.strftime('%d %b %Y, %H:%M') }} UTC</div>
+      </div>
+    </div>
+
+    <div class="links">
+      <a class="card link" href="/docs"><b>Interactive docs</b><span>Swagger UI: try requests in the browser</span></a>
+      <a class="card link" href="/redoc"><b>Reference</b><span>ReDoc: readable API reference</span></a>
+      <a class="card link" href="/openapi.json"><b>OpenAPI schema</b><span>JSON spec for client generators</span></a>
+      {% if frontend_url %}
+      <a class="card link" href="{{ frontend_url }}"><b>Open the app</b><span>Fee management dashboard</span></a>
+      {% else %}
+      <a class="card link" href="/health"><b>Health check</b><span>JSON status for monitoring</span></a>
+      {% endif %}
+    </div>
+
+    <section aria-labelledby="endpoints">
+      <div class="section-head">
+        <h2 id="endpoints">Endpoints</h2>
+        <p>{{ endpoint_count }} endpoints · 🔒 requires sign-in</p>
+      </div>
+      {% for group in groups %}
+      <div class="card group">
+        <h3>{{ group.name }}</h3>
+        {% for r in group.routes %}
+        <div class="route">
+          <span class="method {{ r.method }}">{{ r.method }}</span>
+          <code class="path">/{{ r.path.lstrip('/') }}</code>
+          <span class="summary">{{ r.summary }}</span>
+          <span class="lock" {% if r.protected %}title="Requires sign-in" aria-label="Requires sign-in"{% endif %}>{% if r.protected %}🔒{% endif %}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </section>
+
+    <div class="card note">
+      <p><b>Authentication.</b> <code>POST /api/auth/token</code> with form fields <code>username</code> and <code>password</code>.
+        Browsers get an httponly cookie automatically; other clients can send the returned <code>access_token</code> as
+        <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+      <p>In Swagger, click <b>Authorize</b> and sign in to try protected endpoints.</p>
+    </div>
+
+    <footer>Mliba High School · {{ title }} API v{{ version }}</footer>
+  </div>
+</body>
+</html>

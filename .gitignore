@@ -1,0 +1,26 @@
+# API
+venv
+env
+.env
+.env.*
+*.db
+__pycache__
+.vscode
+*.pyc
+*.sqlite
+*.sqlite3
+
+# Frontend
+.vscode
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
